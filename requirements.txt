@@ -1,3 +1,6 @@
 fastapi
-pydantic
-uvicorn
+uvicorn[standard]
+httpx
+pydantic[dotenv]
+typing
+pydantic-settings
