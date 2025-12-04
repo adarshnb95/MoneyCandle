@@ -1,9 +1,8 @@
-# schemas.py
+# app/schemas/alerts.py
 
 from datetime import datetime
 from enum import Enum
-from pydantic import BaseModel, Field
-
+from pydantic import BaseModel, Field, ConfigDict
 
 class AlertDirection(str, Enum):
     ABOVE = "above"
@@ -11,9 +10,9 @@ class AlertDirection(str, Enum):
 
 
 class AlertCreate(BaseModel):
-    symbol: str = Field(..., description="Ticker symbol, e.g. AAPL")
+    symbol: str = Field(..., description="Ticker symbol, for example AAPL")
     target_price: float = Field(..., gt=0, description="Target price for the alert")
-    direction: AlertDirection = Field(..., description="'above' or 'below'")
+    direction: AlertDirection = Field(..., description="above or below")
 
 
 class Alert(BaseModel):
@@ -23,6 +22,8 @@ class Alert(BaseModel):
     direction: AlertDirection
     created_at: datetime
 
+    # Pydantic v2 style – replaces orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class PriceSnapshot(BaseModel):
     symbol: str
