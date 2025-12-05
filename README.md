@@ -1,88 +1,169 @@
-# MoneyCandle
+📈 MoneyCandle
 
-MoneyCandle is a stock volatility tracker that helps users keep an eye on price swings without staring at charts all day. It pulls market data, calculates volatility, and lets users configure alerts when a stock moves beyond a custom threshold.
+Real-time Stock Price Alerts · FastAPI Backend + Android App
 
-## Why this exists
+MoneyCandle is a full-stack project that tracks stock prices in real time, lets users create price alerts, and checks which alerts would be triggered. The system includes:
 
-Most retail investors either:
+A FastAPI backend with PostgreSQL
 
-- Check prices too often and still miss big moves, or  
-- Set generic price alerts that do not match their risk tolerance.
+A Kotlin Android app using Retrofit + Coroutines
 
-MoneyCandle focuses on **volatility bands** and **personalized alerts**, so users can track meaningful movements for the stocks they actually care about.
+Future support for push notifications and background workers
 
-## Core features (MVP)
+Both backend and Android clients live in this single repository.
 
-- Search and track stocks by ticker symbol
-- Fetch intraday or daily price data from a market data API
-- Compute simple volatility metrics (for example: standard deviation over the last N days)
-- Allow users to set alert rules per ticker (for example: "alert me if daily change > 3 percent")
-- REST API for:
-  - Listing tracked tickers
-  - Getting volatility metrics
-  - Managing alert rules
-- Health check endpoint for monitoring and deployment
+🗂 Repository Structure
+MoneyCandle/
+│
+├── app/                     # FastAPI backend source
+│   ├── db.py
+│   ├── main.py
+│   ├── models.py
+│   ├── schemas/
+│   └── routers/
+│
+├── android/                 # Android app root
+│   └── MoneyCandle/         # Android Studio project folder
+│
+├── tests/                   # Backend tests
+├── requirements.txt         # Backend dependencies
+├── .gitignore
+└── README.md
 
-## Future ideas
+🚀 Backend (FastAPI)
+Features
 
-- User accounts and authentication
-- Push notifications or email alerts
-- Support for watchlists and portfolios
-- Different volatility models (ATR, Bollinger band like ranges, intraday volatility)
-- Android app or web dashboard that talks to this backend
-- Historical alert history and simple analytics
+Create stock price alerts (above/below target)
 
-## Architecture (initial)
+List existing alerts
 
-This repository contains the backend service built with FastAPI.
+Check triggered alerts
 
-High level components:
+PostgreSQL-based persistent storage
 
-- **API layer (FastAPI)**  
-  Exposes endpoints for health checks, stock lookup, volatility metrics, and alert rules.
+Automatic DB schema creation
 
-- **Market data service**  
-  Thin wrapper over an external market data API (for example Alpha Vantage, Finnhub, or any other provider). Responsible for:
-  - Symbol lookup
-  - Fetching price time series
-  - Normalizing the data into a common format
+Tech Stack
 
-- **Volatility and alert logic**  
-  Services that:
-  - Compute volatility from historical prices
-  - Evaluate user alert rules against the latest prices
-  - Trigger notifications (in later versions)
+FastAPI
 
-- **Persistence layer (to be added)**  
-  Database to store:
-  - Tracked tickers
-  - User alert rules
-  - Alert history
+PostgreSQL (Docker)
 
-## Tech stack
+SQLAlchemy
 
-- Python  
-- FastAPI  
-- Uvicorn  
-- httpx (for calling market data APIs)  
-- SQLAlchemy or another ORM (for persistence, in a later iteration)  
+Pydantic v2
 
-## Getting started
+Uvicorn
 
-### Prerequisites
+🧩 Backend Setup
+1) Start PostgreSQL using Docker
+docker run --name moneycandle-postgres ^
+  -e POSTGRES_PASSWORD=supersecret ^
+  -p 5433:5432 ^
+  -d postgres:16
 
-- Python 3.9 or later
-- A market data API key (for example Alpha Vantage or Finnhub)
-
-### Installation
-
-```bash
-git clone https://github.com/<your-username>/moneycandle.git
-cd moneycandle
+2) Install backend dependencies
 python -m venv venv
-# Windows
-venv\Scripts\activate
-# Mac/Linux
-# source venv/bin/activate
-
+.\venv\Scripts\activate
 pip install -r requirements.txt
+
+3) Create .env
+DATABASE_URL=postgresql+psycopg2://postgres:supersecret@localhost:5433/postgres
+
+4) Run the backend
+uvicorn app.main:app --reload
+
+
+API Docs:
+👉 http://127.0.0.1:8000/docs
+
+📱 Android App
+Features (in progress)
+
+View alerts
+
+Create alerts
+
+Check which alerts are triggered
+
+Clean Retrofit API integration
+
+Tech Stack
+
+Kotlin
+
+Android Studio
+
+Retrofit + Moshi
+
+Coroutines
+
+📱 Android Setup
+1) Open the Android project
+
+In Android Studio, open:
+
+android/MoneyCandle/
+
+2) Set base URL
+
+Inside ApiClient.kt:
+
+private const val BASE_URL = "http://10.0.2.2:8000/"
+
+3) Dependencies used
+implementation "com.squareup.retrofit2:retrofit:2.11.0"
+implementation "com.squareup.retrofit2:converter-moshi:2.11.0"
+implementation "com.squareup.okhttp3:logging-interceptor:4.12.0"
+implementation "com.squareup.moshi:moshi:1.15.0"
+implementation "com.squareup.moshi:moshi-kotlin:1.15.0"
+implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1"
+
+🧪 Example API Usage in Android
+Create an alert
+ApiClient.api.createAlert(
+    CreateAlertRequest(
+        symbol = "AAPL",
+        targetPrice = 220.0,
+        direction = AlertDirection.ABOVE
+    )
+)
+
+List alerts
+val alerts = ApiClient.api.getAlerts()
+
+Check triggered alerts
+ApiClient.api.checkAlerts(
+    AlertCheckRequest(
+        prices = listOf(PriceSnapshot("AAPL", 225.0))
+    )
+)
+
+🛣 Roadmap
+Backend
+
+Real stock prices via external API
+
+Background job scheduler
+
+User accounts + JWT
+
+Push notifications (FCM)
+
+Android
+
+Alert list UI
+
+Create alert screen
+
+Background polling worker
+
+Push notification support
+
+🤝 Contributing
+
+This is a personal project but suggestions and improvements are welcome.
+
+📜 License
+
+MIT License — see LICENSE.
