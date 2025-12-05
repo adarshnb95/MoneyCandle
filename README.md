@@ -1,169 +1,148 @@
-📈 MoneyCandle
-
+# 📈 MoneyCandle
 Real-time Stock Price Alerts · FastAPI Backend + Android App
 
-MoneyCandle is a full-stack project that tracks stock prices in real time, lets users create price alerts, and checks which alerts would be triggered. The system includes:
+MoneyCandle is a full-stack project that tracks stock prices, lets users create price alerts, and checks which alerts get triggered.
 
-A FastAPI backend with PostgreSQL
+This repository contains:
 
-A Kotlin Android app using Retrofit + Coroutines
+- A **FastAPI backend** with PostgreSQL  
+- A **Kotlin Android app** using Retrofit + Coroutines  
 
-Future support for push notifications and background workers
+---
 
-Both backend and Android clients live in this single repository.
+## 🗂 Repository Structure
 
-🗂 Repository Structure
+```
 MoneyCandle/
-│
-├── app/                     # FastAPI backend source
+├── app/                     # FastAPI backend
 │   ├── db.py
 │   ├── main.py
 │   ├── models.py
 │   ├── schemas/
 │   └── routers/
-│
-├── android/                 # Android app root
-│   └── MoneyCandle/         # Android Studio project folder
-│
-├── tests/                   # Backend tests
-├── requirements.txt         # Backend dependencies
+├── android/
+│   └── MoneyCandle/         # Android Studio project
+├── tests/
+├── requirements.txt
 ├── .gitignore
 └── README.md
+```
 
-🚀 Backend (FastAPI)
-Features
+---
 
-Create stock price alerts (above/below target)
+## 🚀 Backend (FastAPI)
 
-List existing alerts
+### Features
+- Create stock price alerts  
+- List existing alerts  
+- Check triggered alerts  
+- Persistent storage via PostgreSQL  
 
-Check triggered alerts
+### Tech Stack
+- FastAPI  
+- SQLAlchemy  
+- Pydantic v2  
+- PostgreSQL (Docker)  
+- Uvicorn  
 
-PostgreSQL-based persistent storage
+---
 
-Automatic DB schema creation
+## 🧩 Backend Setup
 
-Tech Stack
+### 1. Start PostgreSQL using Docker
 
-FastAPI
-
-PostgreSQL (Docker)
-
-SQLAlchemy
-
-Pydantic v2
-
-Uvicorn
-
-🧩 Backend Setup
-1) Start PostgreSQL using Docker
+```bash
 docker run --name moneycandle-postgres ^
   -e POSTGRES_PASSWORD=supersecret ^
   -p 5433:5432 ^
   -d postgres:16
+```
 
-2) Install backend dependencies
+### 2. Install backend dependencies
+
+```bash
 python -m venv venv
-.\venv\Scripts\activate
+.env\Scriptsctivate
 pip install -r requirements.txt
+```
 
-3) Create .env
+### 3. Create `.env`
+
+```
 DATABASE_URL=postgresql+psycopg2://postgres:supersecret@localhost:5433/postgres
+```
 
-4) Run the backend
+### 4. Run backend
+
+```bash
 uvicorn app.main:app --reload
+```
 
+API Documentation → http://127.0.0.1:8000/docs  
 
-API Docs:
-👉 http://127.0.0.1:8000/docs
+---
 
-📱 Android App
-Features (in progress)
+## 📱 Android App
 
-View alerts
+### Features (in progress)
+- View price alerts  
+- Create new alerts  
+- Check triggered alerts via backend API  
 
-Create alerts
+### Tech Stack
+- Kotlin  
+- Retrofit + Moshi  
+- Coroutines  
+- Android Studio  
 
-Check which alerts are triggered
+---
 
-Clean Retrofit API integration
+## 📱 Android Setup
 
-Tech Stack
+### 1. Open project
 
-Kotlin
+Open:
 
-Android Studio
-
-Retrofit + Moshi
-
-Coroutines
-
-📱 Android Setup
-1) Open the Android project
-
-In Android Studio, open:
-
+```
 android/MoneyCandle/
+```
 
-2) Set base URL
+### 2. Set backend URL
 
-Inside ApiClient.kt:
+Inside `ApiClient.kt`:
 
+```kotlin
 private const val BASE_URL = "http://10.0.2.2:8000/"
+```
 
-3) Dependencies used
+### 3. Dependencies used
+
+```gradle
 implementation "com.squareup.retrofit2:retrofit:2.11.0"
 implementation "com.squareup.retrofit2:converter-moshi:2.11.0"
 implementation "com.squareup.okhttp3:logging-interceptor:4.12.0"
 implementation "com.squareup.moshi:moshi:1.15.0"
 implementation "com.squareup.moshi:moshi-kotlin:1.15.0"
 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1"
+```
 
-🧪 Example API Usage in Android
-Create an alert
-ApiClient.api.createAlert(
-    CreateAlertRequest(
-        symbol = "AAPL",
-        targetPrice = 220.0,
-        direction = AlertDirection.ABOVE
-    )
-)
+---
 
-List alerts
-val alerts = ApiClient.api.getAlerts()
+## 🛣 Roadmap
 
-Check triggered alerts
-ApiClient.api.checkAlerts(
-    AlertCheckRequest(
-        prices = listOf(PriceSnapshot("AAPL", 225.0))
-    )
-)
+### Backend  
+- Real market price integration  
+- Background job scheduler  
+- Push notifications  
+- User authentication  
 
-🛣 Roadmap
-Backend
+### Android  
+- Alerts UI  
+- Create new alert screen  
+- Background polling  
+- Push notifications  
 
-Real stock prices via external API
+---
 
-Background job scheduler
-
-User accounts + JWT
-
-Push notifications (FCM)
-
-Android
-
-Alert list UI
-
-Create alert screen
-
-Background polling worker
-
-Push notification support
-
-🤝 Contributing
-
-This is a personal project but suggestions and improvements are welcome.
-
-📜 License
-
-MIT License — see LICENSE.
+## 📜 License  
+MIT License
