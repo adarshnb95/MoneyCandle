@@ -4,3 +4,21 @@ __pycache__/
 .env
 .idea/
 .vscode/
+
+# Python / backend
+venv/
+__pycache__/
+*.pyc
+
+# Android / Gradle
+android/.gradle/
+android/.idea/
+android/local.properties
+android/**/build/
+android/**/captures/
+android/*.iml
+android/.DS_Store
+
+# OS junk
+.DS_Store
+Thumbs.db
