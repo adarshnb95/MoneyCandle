@@ -1,4 +1,4 @@
-package com.example.moneycandle.network  // change to your actual package
+package com.adarshnb.moneycandle.network  // change to your actual package
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

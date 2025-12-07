@@ -13,18 +13,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.moneycandle.ui.theme.MoneyCandleTheme
 
-class MainActivity : ComponentActivity() {
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import com.adarshnb.moneycandle.network.ApiClient
+
+class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            MoneyCandleTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+        setContentView(R.layout.activity_main)
+
+        lifecycleScope.launch {
+            try {
+                val alerts = ApiClient.api.getAlerts()
+                Log.d("API_TEST", "Fetched alerts: $alerts")
+            } catch (e: Exception) {
+                Log.e("API_TEST", "Error fetching alerts", e)
             }
         }
     }
