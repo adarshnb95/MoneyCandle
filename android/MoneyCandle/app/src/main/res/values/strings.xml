@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MoneyCandle</string>
+    <string name="hello_message">MoneyCandle Android</string>
 </resources>
